@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchoolLogicLunchAPI", "SchoolLogicLunchAPI\SchoolLogicLunchAPI.csproj", "{087D8FF2-F2D8-441F-903C-2FE867E15A52}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchoolLogicLunchClient", "SchoolLogicLunchClient\SchoolLogicLunchClient.csproj", "{CD3A69EA-252F-4414-AE59-E34B02EB42A8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{087D8FF2-F2D8-441F-903C-2FE867E15A52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{087D8FF2-F2D8-441F-903C-2FE867E15A52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{087D8FF2-F2D8-441F-903C-2FE867E15A52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{087D8FF2-F2D8-441F-903C-2FE867E15A52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD3A69EA-252F-4414-AE59-E34B02EB42A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD3A69EA-252F-4414-AE59-E34B02EB42A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD3A69EA-252F-4414-AE59-E34B02EB42A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD3A69EA-252F-4414-AE59-E34B02EB42A8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
