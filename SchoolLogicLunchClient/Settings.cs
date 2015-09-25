@@ -23,7 +23,7 @@ namespace SchoolLogicLunchClient
             get
             {
                 //return Parsers.ParseInt(ConfigurationManager.AppSettings["MealTypeID"].ToString().Trim());
-                return 1002;
+                return 1001;
             }
         }
 
@@ -34,6 +34,11 @@ namespace SchoolLogicLunchClient
                 //return ConfigurationManager.AppSettings["ServerURL"].ToString().Trim();
                 return "https://sldata.lskysd.ca/SchoolLogicLunch/";
             }
+        }
+
+        public static bool AllowFreeMeals
+        {
+            get { return false; }
         }
 
     }

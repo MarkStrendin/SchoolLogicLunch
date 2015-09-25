@@ -22,9 +22,16 @@ using SLData;
 
 namespace SchoolLogicLunchClient
 {
+    enum PriceMode
+    {
+        FullPrice,
+        ReducedPrice,
+        Free
+    }
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
-    /// </summary>
+    /// </summary> 
     public partial class MainWindow : Window
     {
         private static readonly Timer timer = new Timer();
@@ -34,6 +41,7 @@ namespace SchoolLogicLunchClient
         private static Dictionary<int, MealType> mealTypes = new Dictionary<int, MealType>();
         private ObservableCollection<PurchasedMeal> mealLog = new ObservableCollection<PurchasedMeal>();
 
+        private static PriceMode PriceMode = PriceMode.FullPrice;
         private static bool undoMode = false;
         private static bool currentlyHandlingPurchase = false;
 
@@ -66,26 +74,61 @@ namespace SchoolLogicLunchClient
             else
             {
                 txtStudentNumberEntry.Background = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
-                btnUndo.Content = "Reverse a transaction";
+                btnUndo.Content = "Void";
             }
-
-            lblSchoolID.Content = "SchoolID: " + Settings.SchoolDatabaseID;
-            lblMealTypeID.Content = "MealType: " + Settings.MealType;
-            if (mealTypes.ContainsKey(Settings.MealType))
-            {
-                lblMealTypeID.Content = lblMealTypeID.Content + " (" + mealTypes[Settings.MealType].Name + ")";
-            }
-            else
-            {
-                lblMealTypeID.Content = lblMealTypeID.Content + " (INVALID)";
-            }
-
-            lblStatus.Content = "Students: " + allStudents.Count + ", MealTypes: " + mealTypes.Count;
+            
+            lblStatus.Content = "Students: " + allStudents.Count + ", MealTypes: " + mealTypes.Count + ", SelectedSchoolID: " + Settings.SchoolDatabaseID + ", SelectedMealType: " + Settings.MealType;
 
             if (txtStudentNumberEntry.IsEnabled)
             {
                 txtStudentNumberEntry.Focus();
                 timer.Stop();
+            }
+
+            if (mealTypes.ContainsKey(Settings.MealType))
+            {
+                MealType selectedMealType = mealTypes[Settings.MealType];
+                txtMealName.Text = selectedMealType.Name;
+                txtPriceFree.Text = selectedMealType.FreeAmount.ToString("C");
+                txtPriceFull.Text = selectedMealType.FullAmount.ToString("C");
+                txtPriceReduced.Text = selectedMealType.ReducedAmount.ToString("C");
+
+                switch (PriceMode)
+                {
+                    case PriceMode.FullPrice:
+                        txtMealPrice.Text = selectedMealType.FullAmount.ToString("C");
+                        break;
+                    case PriceMode.ReducedPrice:
+                        txtMealPrice.Text = selectedMealType.ReducedAmount.ToString("C");
+                        break;
+                    case PriceMode.Free:
+                        txtMealPrice.Text = selectedMealType.FreeAmount.ToString("C");
+                        break;
+                }
+            }
+
+            txtPriceFull.FontWeight = FontWeights.Normal;
+            txtPriceReduced.FontWeight = FontWeights.Normal;
+            txtPriceFree.FontWeight = FontWeights.Normal;
+            
+            btnPriceFull.IsEnabled = true;
+            btnPriceReduced.IsEnabled = true;
+            btnPriceFree.IsEnabled = !Settings.AllowFreeMeals && false;
+            
+            switch (PriceMode)
+            {
+                case PriceMode.FullPrice:
+                    btnPriceFull.IsEnabled = false;
+                    txtPriceFull.FontWeight = FontWeights.Bold;
+                    break;
+                case PriceMode.ReducedPrice:
+                    btnPriceReduced.IsEnabled = false;
+                    txtPriceReduced.FontWeight = FontWeights.Bold;
+                    break;
+                case PriceMode.Free:
+                    btnPriceFree.IsEnabled = false;
+                    txtPriceFree.FontWeight = FontWeights.Bold;
+                    break;
             }
 
         }
@@ -226,15 +269,19 @@ namespace SchoolLogicLunchClient
 
         private async void HandleMealPurchase(Student student, MealType mealtype)
         {
-            int mealAmount = 1;
+            if ((student == null) || (mealtype == null)) return;
 
-            if (undoMode)
+            decimal mealAmount = mealtype.FullAmount;
+            if (PriceMode == PriceMode.ReducedPrice)
             {
-                mealAmount = -1;
-                undoMode = false;
-                RefreshUI();
+                mealAmount = mealtype.ReducedAmount;
             }
 
+            if (PriceMode == PriceMode.Free)
+            {
+                mealAmount = mealtype.FreeAmount;
+            }
+            
             // Try to create a valid meal purchase object
             PurchasedMeal newMeal = new PurchasedMeal()
             {
@@ -249,6 +296,32 @@ namespace SchoolLogicLunchClient
 
             if (newMeal.IsValid())
             {
+                if (undoMode)
+                {
+                    // Find the last entry for the entered student and reverse it
+                    bool foundPreviousEntry = false;
+                    foreach (PurchasedMeal pmeal in mealLog.Where(p => p.Voided == false))
+                    {
+                        if (pmeal.StudentID == student.ID)
+                        {
+                            foundPreviousEntry = true;
+                            pmeal.Voided = true;
+                            newMeal.Amount = pmeal.Amount * -1;
+                            newMeal.Voided = true;
+                        }
+                    }
+
+                    undoMode = false;
+                    RefreshUI();
+
+                    // If there is no previous entry to void, don't try to post anything, just ignore this one.
+                    if (foundPreviousEntry == false)
+                    {
+                        return;
+                    }
+                }
+
+
                 // Try to push to the web API
                 try
                 {
@@ -256,7 +329,8 @@ namespace SchoolLogicLunchClient
                     {
                         client.BaseAddress = new Uri(Settings.ServerURL);
                         client.DefaultRequestHeaders.Accept.Clear();
-                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                        client.DefaultRequestHeaders.Accept.Add(
+                            new MediaTypeWithQualityHeaderValue("application/json"));
 
                         HttpResponseMessage response = await client.PostAsJsonAsync("api/PurchasedMeal", newMeal);
                         if (response.IsSuccessStatusCode)
@@ -276,7 +350,8 @@ namespace SchoolLogicLunchClient
             }
             else
             {
-                MessageBox.Show("Invalid meal constructed - unable to post\n" + newMeal, "Invalid PurchasedMeal object", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Invalid meal constructed - unable to post\n" + newMeal,
+                    "Invalid PurchasedMeal object", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -292,6 +367,30 @@ namespace SchoolLogicLunchClient
             }
             
             RefreshUI();
+        }
+
+        private void btnPriceFull_Click(object sender, RoutedEventArgs e)
+        {
+            PriceMode = PriceMode.FullPrice;
+            RefreshUI();
+            resetStudentTextField();
+        }
+
+        private void btnPriceReduced_Click(object sender, RoutedEventArgs e)
+        {
+            PriceMode = PriceMode.ReducedPrice;
+            RefreshUI();
+            resetStudentTextField();
+        }
+
+        private void btnPriceFree_Click(object sender, RoutedEventArgs e)
+        {
+            if (Settings.AllowFreeMeals)
+            {
+                PriceMode = PriceMode.Free;
+                RefreshUI();
+            }
+            resetStudentTextField();
         }
         
     }
