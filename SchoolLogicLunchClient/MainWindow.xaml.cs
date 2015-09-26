@@ -190,10 +190,12 @@ namespace SchoolLogicLunchClient
         
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            ClearLastStudentInfo();
+
             LoadStudents();
             LoadMealTypes();
             
-            // Set up a timer for the clock
+            // Set up a timer that will help set focus to the student number input when the students have been loaded
             txtStudentNumberEntry.Focus();
             timer.Interval = 100;
             timer.Elapsed += TimerOnElapsed;
@@ -202,8 +204,7 @@ namespace SchoolLogicLunchClient
             listMealLog.DataContext = mealLog;
 
             UILoaded = true;
-
-
+            
             resetStudentTextField();
             RefreshUI();
         }
@@ -241,6 +242,7 @@ namespace SchoolLogicLunchClient
                                     if (selectedStudent != null)
                                     {
                                         HandleMealPurchase(selectedStudent, selectedMealType);
+                                        UpdateLastStudentInfo(selectedStudent);
                                     }
                                     resetStudentTextField();
                                 }
@@ -252,8 +254,7 @@ namespace SchoolLogicLunchClient
                             }
                             else
                             {
-                                MessageBox.Show("Student not found!", "Student not found", MessageBoxButton.OK,
-                                    MessageBoxImage.Error);
+                                UpdateLastStudentInfo_StudentNotFound(parsedStudentIDNumber);
                                 resetStudentTextField();
                             }
                         }
@@ -265,6 +266,38 @@ namespace SchoolLogicLunchClient
         private void btnExit_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+        
+        private void ClearLastStudentInfo()
+        {
+            txtLastStudentName.Text = string.Empty;
+            txtLastStudentID.Text = string.Empty;
+            txtLastStudentMedical.Text = string.Empty;
+        }
+
+        private void UpdateLastStudentInfo(Student student)
+        {
+            txtLastStudentName.Text = student.DisplayName;
+            txtLastStudentID.Text = student.StudentNumber;
+
+            if (!string.IsNullOrEmpty(student.MedicalNotes))
+            {
+                txtLastStudentMedical.Visibility = Visibility.Visible;
+                txtLastStudentMedical.Text = "***" + student.MedicalNotes + "***";
+            }
+            else
+            {
+                txtLastStudentMedical.Text = string.Empty;
+                txtLastStudentMedical.Visibility = Visibility.Hidden;
+            }
+
+        }
+
+        private void UpdateLastStudentInfo_StudentNotFound(string enteredStudentNumber)
+        {
+            txtLastStudentName.Text = "Student not found";
+            txtLastStudentID.Text = enteredStudentNumber;
+            txtLastStudentMedical.Text = string.Empty;
         }
 
         private async void HandleMealPurchase(Student student, MealType mealtype)
@@ -308,6 +341,7 @@ namespace SchoolLogicLunchClient
                             pmeal.Voided = true;
                             newMeal.Amount = pmeal.Amount * -1;
                             newMeal.Voided = true;
+                            break;
                         }
                     }
 

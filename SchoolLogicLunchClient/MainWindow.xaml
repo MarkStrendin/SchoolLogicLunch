@@ -1,10 +1,10 @@
 ﻿<Window x:Class="SchoolLogicLunchClient.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="LunchEntryWindow" Height="537.25" Width="976" AllowsTransparency="True" WindowStyle="None" Background="#FF474747" ResizeMode="NoResize" WindowState="Maximized" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+        Title="LunchEntryWindow" Height="751.6" Width="976" AllowsTransparency="True" WindowStyle="None" Background="#FF474747" ResizeMode="NoResize" WindowState="Maximized" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
     <Grid>
         <TextBox x:Name="txtStudentNumberEntry" Height="42" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" FontSize="30" KeyUp="TxtStudentNumberEntry_OnKeyUp" HorizontalAlignment="Left" Width="311"/>
-        <ListView Name="listMealLog" Margin="327,10,10,36" Background="White" ItemsSource="{Binding}" BorderBrush="{x:Null}" FontSize="18">
+        <ListView Name="listMealLog" Margin="327,10,10,36" Background="#19FFFFFF" ItemsSource="{Binding}" BorderBrush="{x:Null}" FontSize="18" Foreground="White">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Width="175" Header="Date" DisplayMemberBinding="{Binding Path=Date}" />
@@ -18,14 +18,17 @@
         </ListView>
         <Button Name="btnExit" Content="Exit" HorizontalAlignment="Left" Margin="10,0,0,8" VerticalAlignment="Bottom" Width="75" Click="btnExit_Click"/>
         <Label Name="lblStatus" Content="Status" Margin="327,0,10,8" VerticalAlignment="Bottom" RenderTransformOrigin="0.526,0.769" Foreground="White" Opacity="0.2" FontSize="10"/>
-        <Button Name="btnUndo" Content="" HorizontalAlignment="Left" Margin="10,416,0,0" VerticalAlignment="Top" Width="100" RenderTransformOrigin="0.453,-0.35" Click="btnUndo_Click"/>
-        <Button Name="btnPriceFull" IsEnabled="False" Content="Full price" HorizontalAlignment="Left" Margin="10,303,0,0" VerticalAlignment="Top" Width="100" Click="btnPriceFull_Click"/>
-        <Button Name="btnPriceReduced" Content="Reduced price" HorizontalAlignment="Left" Margin="10,328,0,0" VerticalAlignment="Top" Width="100" Click="btnPriceReduced_Click"/>
-        <Button Name="btnPriceFree"  Content="Free" HorizontalAlignment="Left" Margin="10,353,0,0" VerticalAlignment="Top" Width="100" Click="btnPriceFree_Click"/>
-        <TextBlock Name="txtMealName" Margin="9,106,0,0" TextWrapping="Wrap" Text="INVALID MEAL" VerticalAlignment="Top" Height="61" FontSize="38" FontWeight="Bold" TextAlignment="Center" Foreground="White" HorizontalAlignment="Left" Width="312"/>
-        <TextBlock Name="txtPriceFull" HorizontalAlignment="Left" Margin="115,305,0,0" TextWrapping="Wrap" Text="$" VerticalAlignment="Top" Width="206" Foreground="White"/>
-        <TextBlock Name="txtPriceReduced" HorizontalAlignment="Left" Margin="115,330,0,0" TextWrapping="Wrap" Text="$" VerticalAlignment="Top" Width="206" Foreground="White"/>
-        <TextBlock Name="txtPriceFree" HorizontalAlignment="Left" Margin="115,355,0,0" TextWrapping="Wrap" Text="$" Width="206" Foreground="White" Height="16" VerticalAlignment="Top"/>
-        <TextBlock x:Name="txtMealPrice" Margin="10,187,0,0" TextWrapping="Wrap" Text="$" VerticalAlignment="Top" Height="61" FontSize="34" FontWeight="Bold" TextAlignment="Center" Foreground="White" HorizontalAlignment="Left" Width="312"/>
+        <Button Name="btnUndo" Content="" HorizontalAlignment="Left" Margin="10,688,0,0" VerticalAlignment="Top" Width="100" RenderTransformOrigin="0.453,-0.35" Click="btnUndo_Click"/>
+        <Button Name="btnPriceFull" IsEnabled="False" Content="Full price" HorizontalAlignment="Left" Margin="10,574,0,0" VerticalAlignment="Top" Width="100" Click="btnPriceFull_Click"/>
+        <Button Name="btnPriceReduced" Content="Reduced price" HorizontalAlignment="Left" Margin="10,600,0,0" VerticalAlignment="Top" Width="100" Click="btnPriceReduced_Click"/>
+        <Button Name="btnPriceFree"  Content="Free" HorizontalAlignment="Left" Margin="10,624,0,0" VerticalAlignment="Top" Width="100" Click="btnPriceFree_Click"/>
+        <TextBlock Name="txtMealName" Margin="9,378,0,0" TextWrapping="Wrap" Text="INVALID MEAL" VerticalAlignment="Top" Height="60" FontSize="38" FontWeight="Bold" TextAlignment="Center" Foreground="White" HorizontalAlignment="Left" Width="312"/>
+        <TextBlock Name="txtPriceFull" HorizontalAlignment="Left" Margin="115,576,0,0" TextWrapping="Wrap" Text="$" VerticalAlignment="Top" Width="206" Foreground="White"/>
+        <TextBlock Name="txtPriceReduced" HorizontalAlignment="Left" Margin="115,602,0,0" TextWrapping="Wrap" Text="$" VerticalAlignment="Top" Width="206" Foreground="White"/>
+        <TextBlock Name="txtPriceFree" HorizontalAlignment="Left" Margin="115,626,0,0" TextWrapping="Wrap" Text="$" Width="206" Foreground="White" Height="16" VerticalAlignment="Top"/>
+        <TextBlock Name="txtMealPrice" Margin="10,458,0,0" TextWrapping="Wrap" Text="$" VerticalAlignment="Top" Height="62" FontSize="34" FontWeight="Bold" TextAlignment="Center" Foreground="White" HorizontalAlignment="Left" Width="312"/>
+        <TextBlock Name="txtLastStudentName" HorizontalAlignment="Left" Margin="10,57,0,0" TextWrapping="Wrap" Text="Last Student Name" VerticalAlignment="Top" Width="311" Foreground="White" FontSize="18"/>
+        <TextBlock Name="txtLastStudentID" HorizontalAlignment="Left" Margin="10,81,0,0" TextWrapping="Wrap" Text="Last Student ID" VerticalAlignment="Top" Width="311" Foreground="White" FontSize="14"/>
+        <TextBlock Name="txtLastStudentMedical" HorizontalAlignment="Left" Margin="10,114,0,0" TextWrapping="Wrap" Text="Medical Notes" VerticalAlignment="Top" Height="172" Width="311" Foreground="#FFFFF300" FontSize="18"/>
     </Grid>
 </Window>
