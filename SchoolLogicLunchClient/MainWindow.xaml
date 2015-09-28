@@ -18,7 +18,7 @@
         </ListView>
         <Button Name="btnExit" Content="Exit" HorizontalAlignment="Left" Margin="10,0,0,8" VerticalAlignment="Bottom" Width="75" Click="btnExit_Click"/>
         <Label Name="lblStatus" Content="Status" Margin="327,0,10,8" VerticalAlignment="Bottom" RenderTransformOrigin="0.526,0.769" Foreground="White" Opacity="0.2" FontSize="10"/>
-        <Button Name="btnUndo" Content="" HorizontalAlignment="Left" Margin="10,688,0,0" VerticalAlignment="Top" Width="100" RenderTransformOrigin="0.453,-0.35" Click="btnUndo_Click"/>
+        <Button Name="btnUndo" Content="Void" HorizontalAlignment="Left" Margin="221,0,0,10" VerticalAlignment="Bottom" Width="100" RenderTransformOrigin="0.453,-0.35" Click="btnUndo_Click"/>
         <Button Name="btnPriceFull" IsEnabled="False" Content="Full price" HorizontalAlignment="Left" Margin="10,574,0,0" VerticalAlignment="Top" Width="100" Click="btnPriceFull_Click"/>
         <Button Name="btnPriceReduced" Content="Reduced price" HorizontalAlignment="Left" Margin="10,600,0,0" VerticalAlignment="Top" Width="100" Click="btnPriceReduced_Click"/>
         <Button Name="btnPriceFree"  Content="Free" HorizontalAlignment="Left" Margin="10,624,0,0" VerticalAlignment="Top" Width="100" Click="btnPriceFree_Click"/>

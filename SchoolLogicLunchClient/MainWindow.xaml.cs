@@ -207,6 +207,25 @@ namespace SchoolLogicLunchClient
             
             resetStudentTextField();
             RefreshUI();
+
+            if (!Settings.AllowFreeMeals)
+            {
+                txtPriceFree.Visibility = Visibility.Hidden;
+                btnPriceFree.Visibility = Visibility.Hidden;
+            }
+
+            if (!Settings.AllowReducedMeals)
+            {
+                txtPriceReduced.Visibility = Visibility.Hidden;
+                btnPriceReduced.Visibility = Visibility.Hidden;
+            }
+
+            if (!Settings.AllowFreeMeals && !Settings.AllowReducedMeals)
+            {
+                txtPriceFull.Visibility = Visibility.Hidden;
+                btnPriceFull.Visibility = Visibility.Hidden;
+                PriceMode = PriceMode.FullPrice;
+            }
         }
 
         private void resetStudentTextField()

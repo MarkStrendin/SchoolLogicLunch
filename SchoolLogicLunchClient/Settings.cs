@@ -36,6 +36,11 @@ namespace SchoolLogicLunchClient
             }
         }
 
+        public static bool AllowReducedMeals
+        {
+            get { return false;  }
+        }
+
         public static bool AllowFreeMeals
         {
             get { return false; }
