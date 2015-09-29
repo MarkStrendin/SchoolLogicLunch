@@ -11,7 +11,7 @@
 
         public string DisplayName
         {
-            get { return this.FirstName + " " + this.LastName; }
+            get { return this.FirstName + " " + this.LastName + " (" + this.StudentNumber + ")"; }
         }
 
         public override string ToString()
@@ -19,5 +19,7 @@
             return "{ ID:" + this.ID + ", StudentNumber:" + this.StudentNumber + ", FirstName:" + this.FirstName +
                    ", LastName:" + this.LastName + " }";
         }
+
+        public Student() { }
     }
 }

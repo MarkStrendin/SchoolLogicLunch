@@ -16,7 +16,7 @@ namespace SLData
         // Stuff that shouldn't be serialized below here
         public string Date
         {
-            get { return this.DateAndTime.ToLongDateString(); }
+            get { return this.DateAndTime.ToShortDateString(); }
         }
         public string Time
         {

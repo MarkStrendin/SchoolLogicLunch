@@ -9,12 +9,24 @@ namespace SchoolLogicLunchClient
 {
     static class Settings
     {
+        public static bool IsConfigFileValid()
+        {
+            if (
+                (!string.IsNullOrEmpty(Settings.ServerURL)) &&
+                (Settings.MealType > 0) && 
+                (Settings.SchoolDatabaseID > 0)
+                )
+            {
+                return true;
+            }
+            return false;
+        }
+
         public static int SchoolDatabaseID
         {
             get
             {
-                //return Parsers.ParseInt(ConfigurationManager.AppSettings["SchoolDatabaseID"].ToString().Trim());
-                return 0;
+                return Parsers.ParseInt(ConfigurationManager.AppSettings["iSchoolID"]);
             }
         }
 
@@ -22,28 +34,31 @@ namespace SchoolLogicLunchClient
         {
             get
             {
-                //return Parsers.ParseInt(ConfigurationManager.AppSettings["MealTypeID"].ToString().Trim());
-                return 1001;
+                return Parsers.ParseInt(ConfigurationManager.AppSettings["MealTypeID"]);
             }
         }
 
         public static string ServerURL
         {
-            get
-            {
-                //return ConfigurationManager.AppSettings["ServerURL"].ToString().Trim();
-                return "https://sldata.lskysd.ca/SchoolLogicLunch/";
+            get {
+                return !string.IsNullOrEmpty(ConfigurationManager.AppSettings["APIURL"]) ? ConfigurationManager.AppSettings["APIURL"] : string.Empty;
             }
         }
 
         public static bool AllowReducedMeals
         {
-            get { return false;  }
+            get
+            {
+                return Parsers.ParseBool(ConfigurationManager.AppSettings["AllowReducedPrice"]);
+            }
         }
 
         public static bool AllowFreeMeals
         {
-            get { return false; }
+            get
+            {
+                return Parsers.ParseBool(ConfigurationManager.AppSettings["AllowFreeMeals"]);
+            }
         }
 
     }

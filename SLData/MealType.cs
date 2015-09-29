@@ -17,5 +17,7 @@ namespace SLData
         public bool AllowedFree { get; set; }
         public int iSchoolID { get; set; }
         public int SortOrder { get; set; }
+
+        public MealType() { }
     }
 }
