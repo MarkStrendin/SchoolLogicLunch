@@ -1,7 +1,7 @@
 ﻿<Window x:Class="SchoolLogicLunchClient.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Lunch Entry Window" Height="751.6" Width="976" AllowsTransparency="True" WindowStyle="None" Background="#FF474747" ResizeMode="NoResize" WindowState="Maximized" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+        Title="Lunch Entry Window" Height="751.6" Width="976" AllowsTransparency="True" WindowStyle="None" Background="#FF474747" ResizeMode="NoResize" WindowState="Maximized" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Closing="Window_Closing">
     <Grid>
         <TextBox x:Name="txtStudentNumberEntry" Height="42" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" FontSize="30" KeyUp="TxtStudentNumberEntry_OnKeyUp" HorizontalAlignment="Left" Width="311"/>
         <ListView Name="listMealLog" Margin="327,10,10,36" Background="#19FFFFFF" ItemsSource="{Binding}" BorderBrush="{x:Null}" FontSize="18" Foreground="White">

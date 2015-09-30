@@ -68,9 +68,7 @@ namespace SchoolLogicLunchClient
         {
             if (!Settings.IsConfigFileValid())
             {
-                MessageBox.Show("Config file not found or not complete.", "Invalid configuration file",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-                Application.Current.Shutdown();
+                CriticalError("Config file not found or not complete.", "Invalid configuration file");
             }
             else
             {
@@ -269,8 +267,22 @@ namespace SchoolLogicLunchClient
         }
 
         #endregion
-        
-        
+
+        /// <summary>
+        /// Display an error message, and close the program
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="title"></param>
+        private static void CriticalError(string message, string title)
+        {
+            MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Error);
+            try
+            {
+                timer.Stop();
+                Application.Current.Shutdown();
+            } catch { }
+        }
+
         #region Data Loading methods
 
         /*
@@ -304,7 +316,7 @@ namespace SchoolLogicLunchClient
                     }
                     else
                     {
-                        MessageBox.Show(response.Content.ToString());
+                        CriticalError("Error loading MealTypes: " + response.StatusCode, "Error loading MealTypes");
                     }
                 }
                 Dispatcher.Invoke((Action)(RefreshUI));
@@ -341,7 +353,7 @@ namespace SchoolLogicLunchClient
                 }
                 else
                 {
-                    MessageBox.Show(response.Content.ToString());
+                    CriticalError("Error loading Students: " + response.StatusCode, "Error loading Students");
                 }
             }
 
@@ -521,6 +533,11 @@ namespace SchoolLogicLunchClient
                 MessageBox.Show("Invalid meal constructed - unable to post\n" + newMeal,
                     "Invalid PurchasedMeal object", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            timer.Stop();
         }
 
     }
