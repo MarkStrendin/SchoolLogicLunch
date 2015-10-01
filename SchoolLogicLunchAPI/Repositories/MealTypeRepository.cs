@@ -10,37 +10,66 @@ namespace SchoolLogicLunchAPI.Repositories
 {
     public class MealTypeRepository
     {
+
+        private static Dictionary<int, MealType> _cachedMealTypes = new Dictionary<int, MealType>();
+        private static DateTime _cacheLastRefreshed = DateTime.MinValue;
+        private static object _mealTypeCacheLock = new object();
+
+        private static Dictionary<int, MealType> GetCache()
+        {
+            if (_cachedMealTypes == null)
+            {
+                _cachedMealTypes = new Dictionary<int, MealType>();
+            }
+
+            lock (_mealTypeCacheLock)
+            {
+                if (DateTime.Now.Subtract(_cacheLastRefreshed) > new TimeSpan(0, 10, 0)) // Cache for 10 minutes
+                {
+                    _cachedMealTypes = new Dictionary<int, MealType>();
+
+                    using (SqlConnection connection = new SqlConnection(Settings.DatabaseConnectionString))
+                    {
+                        SqlCommand sqlCommand = new SqlCommand
+                        {
+                            Connection = connection,
+                            CommandType = CommandType.Text,
+                            CommandText = "SELECT * FROM MealType;"
+                        };
+
+                        sqlCommand.Connection.Open();
+                        SqlDataReader dataReader = sqlCommand.ExecuteReader();
+
+                        if (dataReader.HasRows)
+                        {
+                            while (dataReader.Read())
+                            {
+                                MealType foundMealType = dataReaderToMealType(dataReader);
+                                if (foundMealType != null)
+                                {
+                                    _cachedMealTypes.Add(foundMealType.ID, foundMealType);
+                                }
+                            }
+                        }
+
+                        sqlCommand.Connection.Close();
+                    }
+
+                    _cacheLastRefreshed = DateTime.Now;
+                }
+            }
+
+            return _cachedMealTypes;
+        }
+
+        public static Dictionary<int, MealType> GetDictionary()
+        {
+            return GetCache();
+        }
+
         public IEnumerable<MealType> GetAll()
         {
-            List<MealType> returnMe = new List<MealType>();
-
-            using (SqlConnection connection = new SqlConnection(Settings.DatabaseConnectionString))
-            {
-                SqlCommand sqlCommand = new SqlCommand
-                {
-                    Connection = connection,
-                    CommandType = CommandType.Text,
-                    CommandText = "SELECT * FROM MealType;"
-                };
-
-                sqlCommand.Connection.Open();
-                SqlDataReader dataReader = sqlCommand.ExecuteReader();
-
-                if (dataReader.HasRows)
-                {
-                    while (dataReader.Read())
-                    {
-                        MealType foundMealType = dataReaderToMealType(dataReader);
-                        if (foundMealType != null)
-                        {
-                            returnMe.Add(foundMealType);
-                        }
-                    }
-                }
-
-                sqlCommand.Connection.Close();
-            }
-            return returnMe;
+            return GetCache().Values.ToList();
         }
 
         private static MealType dataReaderToMealType(SqlDataReader dataReader)

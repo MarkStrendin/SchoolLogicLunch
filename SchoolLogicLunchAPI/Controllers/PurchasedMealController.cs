@@ -30,12 +30,37 @@ namespace SchoolLogicLunchAPI.Controllers
         {
             try
             {
-                // Add the meal, but also get the ID number for the meal added by the repository so the client can get that
-                value = Repository.Add(value);
+                Dictionary<int, MealType> allMealTypes = MealTypeRepository.GetDictionary();
 
-                // Apparently we should be responding to a POST request with HTTP status 201 instead of 200, which would be the default
-                HttpResponseMessage response = Request.CreateResponse<PurchasedMeal>(HttpStatusCode.Created, value);
-                return response;
+                // Find the selected meal type
+                if (allMealTypes.ContainsKey(value.MealType))
+                {
+                    MealType selectedMealType = allMealTypes[value.MealType];
+
+                    if (value.Amount <= selectedMealType.FullAmount)
+                    {
+                        if (value.Amount >= selectedMealType.FullAmount*-1)
+                        {
+                            value = Repository.Add(value);
+
+                            // Apparently we should be responding to a POST request with HTTP status 201 instead of 200, which would be the default
+                            HttpResponseMessage response = Request.CreateResponse<PurchasedMeal>(HttpStatusCode.Created, value);
+                            return response;
+                        }
+                        else
+                        {
+                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, new Exception("Amount cannot be less than full price * -1"));  
+                        }
+                    }
+                    else
+                    {
+                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, new Exception("Amount cannot be more than full price"));  
+                    }
+                }
+                else
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, new Exception("Invalid MealID"));    
+                }
             }
             catch( Exception ex)
             {

@@ -316,7 +316,15 @@ namespace SchoolLogicLunchClient
                     }
                     else
                     {
-                        CriticalError("Error loading MealTypes: " + response.StatusCode, "Error loading MealTypes");
+                        if (response.StatusCode == HttpStatusCode.Forbidden)
+                        {
+                            CriticalError("Access not allowed from this location", "Access denied");
+                        }
+                        else
+                        {
+                            CriticalError("Error loading MealTypes: " + response.StatusCode, "Error loading MealTypes");
+                        }
+                        
                     }
                 }
                 Dispatcher.Invoke((Action)(RefreshUI));
@@ -353,7 +361,14 @@ namespace SchoolLogicLunchClient
                 }
                 else
                 {
-                    CriticalError("Error loading Students: " + response.StatusCode, "Error loading Students");
+                    if (response.StatusCode == HttpStatusCode.Forbidden)
+                    {
+                        CriticalError("Access not allowed from this location", "Access denied");
+                    }
+                    else
+                    {
+                        CriticalError("Error loading Students: " + response.StatusCode, "Error loading Students");
+                    }
                 }
             }
 
