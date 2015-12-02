@@ -548,6 +548,11 @@ namespace SchoolLogicLunchClient
                 MessageBox.Show("Invalid meal constructed - unable to post\n" + newMeal,
                     "Invalid PurchasedMeal object", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
+            // Scroll to the last item scanned
+            listMealLog.Items.MoveCurrentToLast();
+            listMealLog.ScrollIntoView(listMealLog.Items.CurrentItem);
+
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
