@@ -408,9 +408,12 @@ namespace SchoolLogicLunchClient
                         currentlyHandlingPurchase = true;
 
                         string parsedStudentIDNumber = txtStudentNumberEntry.Text.Trim();
+
+                        // Check to make sure we actually scanned something
                         if (!string.IsNullOrEmpty(parsedStudentIDNumber))
                         {
 
+                            // Check for and prevent duplicate consecutive scanning of the same ID number
                             if (!voidMode)
                             {
                                 if (parsedStudentIDNumber == LastValueScanned)
@@ -423,7 +426,7 @@ namespace SchoolLogicLunchClient
                                 LastValueScanned = parsedStudentIDNumber;
                             }
 
-
+                            // Handle the purchased meal
                             if (allStudents.ContainsKey(parsedStudentIDNumber))
                             {
                                 if (mealTypes.ContainsKey(Settings.MealType))
