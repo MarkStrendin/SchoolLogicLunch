@@ -59,6 +59,9 @@ namespace SchoolLogicLunchClient
         // Is the system currently handling a purchase? Don't try to start a new one until the last one is taken care of
         private static bool currentlyHandlingPurchase = false;
 
+        // Store the last value scanned, and prevent it from being scanned in again immediately after
+        private static string LastValueScanned = string.Empty; 
+
         public MainWindow()
         {
             InitializeComponent();
@@ -266,6 +269,17 @@ namespace SchoolLogicLunchClient
             txtLastStudentMedical.Text = string.Empty;
         }
 
+        /// <summary>
+        /// Display information on the last student scanned, if the student number wasn't found.
+        /// </summary>
+        /// <param name="enteredStudentNumber"></param>
+        private void UpdateLastStudentInfo_Duplicate()
+        {
+            txtLastStudentName.Text = "Ignoring duplicate scan";
+            txtLastStudentID.Text = "Scanned number was the same as last";
+            txtLastStudentMedical.Text = string.Empty;
+        }
+
         #endregion
 
         /// <summary>
@@ -396,6 +410,20 @@ namespace SchoolLogicLunchClient
                         string parsedStudentIDNumber = txtStudentNumberEntry.Text.Trim();
                         if (!string.IsNullOrEmpty(parsedStudentIDNumber))
                         {
+
+                            if (!voidMode)
+                            {
+                                if (parsedStudentIDNumber == LastValueScanned)
+                                {
+                                    UpdateLastStudentInfo_Duplicate();
+                                    resetStudentTextField();
+                                    return;
+                                }
+
+                                LastValueScanned = parsedStudentIDNumber;
+                            }
+
+
                             if (allStudents.ContainsKey(parsedStudentIDNumber))
                             {
                                 if (mealTypes.ContainsKey(Settings.MealType))
@@ -465,6 +493,7 @@ namespace SchoolLogicLunchClient
             // The only information we need is a student database ID and a mealtype id
             // If we don't have that, don't bother continuing.
             if ((student == null) || (mealtype == null)) return;
+
 
             // Figure out what this meal is going to cost
             decimal mealCost = mealtype.FullAmount;
