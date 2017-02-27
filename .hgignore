@@ -3,6 +3,13 @@
 # use glob syntax.
 syntax: glob
 
+# Visual Studio 2015 addition
+.vs/
+
+# Jetbrains Rider working folder
+.idea/
+*.sln.iml
+
 # Build folders
 bin/
 Bin/
